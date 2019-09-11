@@ -10,33 +10,41 @@ function moveToSelected(element) {
 
   var next = $(selected).next();
   var prev = $(selected).prev();
+  var nextSecond = $(next).next();
 
   $(selected).removeClass().addClass("selected");
-
-  $(prev).removeClass().addClass("hidden");
+  $(prev).removeClass().addClass("hidden-lf");
   $(next).removeClass().addClass("next");
+  $(nextSecond).removeClass().addClass("hidden");
 
+  if ($(".selected").is(':first-child')) {
+    $('#prev').addClass("btn-disable");
+  } else {
+    $('#prev').removeClass("btn-disable");
+  }
 
+  if ($(".selected").is(':last-child')) {
+    $('#next').addClass("btn-disable");
+  } else {
+    $('#next').removeClass("btn-disable");
+  }
 
 }
 
 //Utilizar setas do teclado para mover o slider.
-$(document).keydown(function (e) { //Recebendo o (e) do evento ativado 
-  switch (e.which) { // a propriedade .which retorna qual tecla do teclado ou botão do mouse foi pressionada para o evento.
-    case 37: // esquerda | 37 é o numero definido para a seta da esquerda
-      moveToSelected('prev'); //chama a função e passa o 'prev'
-      break; //fim do switch
 
-    case 39: // direita | 39 é o numero definido para a seta da direita
-      moveToSelected('next'); //chama a função e passa o 'next'
-      break; //fim do switch
+$(document).keydown(function (e) {
+  const move = [];
 
-    default: return; // Caso nada dentro do switch sejá "true", ele retorna um vazio.
-  }
-  e.preventDefault(); //Previnindo o evento padrão para os eventos das teclas, assim evitando conflitos.
+  move[37] = () => moveToSelected('prev');
+  move[39] = () => moveToSelected('next');
+
+  move[e.which]();
+
+  e.preventDefault();
 });
 
-$('#carousel div').click(function () {
+$('.clickMove').click(function () {
   moveToSelected($(this));
 });
 
@@ -47,3 +55,26 @@ $('#prev').click(function () {
 $('#next').click(function () {
   moveToSelected('next');
 });
+
+
+$("p").on("swipe", function () {
+  $(this).hide();
+});
+
+
+$(function () {
+  $(".clickMove").swipe({
+    swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+      if (direction == "right") {
+        moveToSelected('prev');
+      } else if (direction == "left") {
+        moveToSelected('next');
+      }
+    },
+    threshold: 0
+  });
+});
+
+
+
+
