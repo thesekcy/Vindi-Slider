@@ -17,6 +17,7 @@ function moveToSelected(element) {
   $(next).removeClass().addClass("next");
   $(nextSecond).removeClass().addClass("hidden");
 
+  //Controle dos botões
   if ($(".selected").is(':first-child')) {
     $('#prev').addClass("btn-disable");
   } else {
@@ -54,11 +55,6 @@ $('#prev').click(function () {
 
 $('#next').click(function () {
   moveToSelected('next');
-});
-
-
-$("p").on("swipe", function () {
-  $(this).hide();
 });
 
 
